@@ -1,7 +1,7 @@
 {
   "scripts": {
     "format": "prettier --write .",
-    "prepare:": "husky"
+    "prepare": "husky"
   },
   "devDependencies": {
     "eslint": "^9.14.0",
