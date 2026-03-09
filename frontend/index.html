@@ -20,114 +20,65 @@
         }
     </script>
 </head>
-<body class="flex items-center justify-center min-h-screen p-5"
-      style="background: #0a0a0a; background-image: radial-gradient(ellipse at top left, rgba(0,255,255,0.1) 0%, transparent 50%), radial-gradient(ellipse at bottom right, rgba(255,0,255,0.1) 0%, transparent 50%), linear-gradient(180deg, #0a0a0a 0%, #1a0a1a 100%);">
-
-    <div class="app-layout flex w-full max-w-5xl h-[700px] rounded-2xl overflow-hidden border-2 border-cyan-400/40 relative"
-         style="box-shadow: 0 0 40px rgba(0,255,255,0.3), inset 0 0 20px rgba(255,0,255,0.05);">
-
-        <aside class="flex flex-col w-60 min-w-[240px] border-r border-cyan-400/20 p-4 gap-4"
-               style="background: rgba(8,8,18,0.98);">
-
-            <div class="flex items-center gap-3 pb-4 border-b border-cyan-400/15">
-                <!-- <div class="w-9 h-9 rounded-lg flex items-center justify-center text-[13px] text-[#0a0a0a] font-black flex-shrink-0 ai-icon"
-                     style="background: linear-gradient(135deg, #00ffff, #ff00ff); font-family: 'Orbitron', monospace;">AI</div> -->
-                <span class="text-lg font-black tracking-[3px] text-cyan-400" style="font-family: 'Orbitron', monospace;">NEO AI</span>
+<body class="flex items-center justify-center min-h-screen p-5">
+      
+    <div class="app-layout flex w-full h-[700px] rounded-2xl overflow-hidden border-2 border-2 relative">
+        <!-- sidebar -->
+        <aside id="sidebar" class="sidebar flex flex-col w-60 min-w-[240px] border-r p-4 gap-4">
+            <div class="flex items-center gap-3 pb-4 border-b">
+                <span class="ai-title">NEO AI</span>
             </div>
 
-            <button class="flex items-center gap-2 border text-sm font-semibold tracking-widest px-4 py-2.5 rounded-xl uppercase transition-all duration-300 hover:translate-x-1 cursor-pointer"
-                    style="background: rgba(0,255,255,0.08); border-color: rgba(0,255,255,0.3); color: #00ffff; font-family: 'Rajdhani', sans-serif;">
-                <i class="fa fa-plus text-xs"></i>
-                New Chat
+            <button class="new-chat-btn flex items-center gap-2 border text-sm font-semibold tracking-widest px-4 py-2.5 rounded-xl uppercase transition-all duration-300 hover:translate-x-1">
+                <i class="fa fa-plus text-xs"></i> New Chat
             </button>
-
-            <span class="text-[11px] font-semibold tracking-[2px] uppercase px-1"
-                  style="color: rgba(0,255,255,0.4); font-family: 'Rajdhani', sans-serif;">Recent</span>
+            <span class="recent-label">Recent</span>
 
             <!-- conversation -->
             <ul class="flex flex-col gap-1 flex-1 overflow-y-auto">
-                <li class="px-3 py-2.5 rounded-lg text-sm cursor-pointer truncate border"
-                    style="color: #00ffff; background: rgba(0,255,255,0.1); border-color: rgba(0,255,255,0.3);">
-                    Current Session
-                </li>
-                <li class="px-3 py-2.5 rounded-lg text-sm cursor-pointer truncate border border-transparent transition-all duration-200"
-                    style="color: rgba(255,255,255,0.5);"
-                    onmouseover="this.style.background='rgba(0,255,255,0.06)'; this.style.color='rgba(255,255,255,0.85)';"
-                    onmouseout="this.style.background='transparent'; this.style.color='rgba(255,255,255,0.5)';">
+                <li class="current-session active px-3 py-2.5 rounded-lg text-sm truncate border"> Current Session </li>
+                <li class="recent-chat px-3 py-2.5 rounded-lg text-sm truncate border">
                     Data Analysis #4
                 </li>
-                <li class="px-3 py-2.5 rounded-lg text-sm cursor-pointer truncate border border-transparent transition-all duration-200"
-                    style="color: rgba(255,255,255,0.5);"
-                    onmouseover="this.style.background='rgba(0,255,255,0.06)'; this.style.color='rgba(255,255,255,0.85)';"
-                    onmouseout="this.style.background='transparent'; this.style.color='rgba(255,255,255,0.5)';">
+                <li class="recent-chat px-3 py-2.5 rounded-lg text-sm truncate border">
                     Code Review
                 </li>
             </ul>
-
-            <div class="flex gap-4 pt-4 border-t border-cyan-400/15 text-lg" style="color: rgba(0,255,255,0.5);">
-                <i class="fa fa-cog cursor-pointer transition-all duration-300 hover:text-cyan-400"></i>
-                <i class="fa fa-user-circle cursor-pointer transition-all duration-300 hover:text-cyan-400"></i>
+            <!-- settings -->
+            <div class="settings-cont gap-4 pt-4 border-t text-lg">
+                <i class="fa fa-cog"></i>
+                <i class="fa fa-user-circle"></i>
             </div>
 
         </aside>
 
         <!-- chat-->
-        <div class="flex flex-col flex-1 overflow-hidden" style="background: rgba(10,10,20,0.95);">
-
-            <div class="flex items-center justify-between px-6 py-5 border-b border-cyan-400/30 flex-shrink-0 backdrop-blur-md"
-                 style="background: rgba(20,20,40,0.8);">
-                <div class="flex items-center gap-4">
-                    <div class="profile-pic relative w-10 h-10"></div>
-                    <div>
-                        <strong class="text-white text-lg tracking-wide" style="font-family: 'Orbitron', monospace;">Current Session</strong>
-                    </div>
-                </div>
-                <!-- <div class="flex items-center gap-3">
-                    <i class="fa fa-cog text-xl p-2 cursor-pointer transition-all duration-300" style="color: rgba(0,255,255,0.6);"></i>
-                    <span class="text-xl p-2 cursor-pointer transition-all duration-300" style="color: rgba(0,255,255,0.6);">⋮</span>
-                </div> -->
+        <div class="flex flex-col flex-1 overflow-hidden chat-area">
+            <div class="flex items-center justify-between px-6 py-5 border-b border-cyan-400/30 flex-shrink-0 backdrop-blur-md">
+                    <strong class="chat-title text-white text-lg tracking-wide" style="font-family: 'Orbitron', monospace;">Current Session</strong>
             </div>
 
-            <div id="message-list" class="flex-1 overflow-y-auto flex flex-col gap-4 p-6"
-                 style="background: rgba(10,10,20,0.6);">
-
+            <div id="message-list" class="flex-1 overflow-y-auto flex flex-col gap-4 p-6">
                 <chat-message sender="ai">How can I assist you today?</chat-message>
-
-                <chat-message sender="user">Can you run a full diagnostic on the neural uplink? Something feels off with the data stream.</chat-message>
-
+                <chat-message sender="user">Can you run a full diagnostic on the neural uplink?</chat-message>
                 <chat-message sender="ai">Diagnostic initiated. Scanning all 47 neural pathways... Anomaly detected in sector 7-G. Packet loss at 3.2%. Recommend rerouting through the auxiliary grid.</chat-message>
-
                 <chat-message sender="user">Reroute confirmed. Also pull up the encrypted logs from last night's session.</chat-message>
-
                 <chat-message sender="ai">Decrypting logs now. 3 anomalous access attempts flagged between 02:14 and 02:31. Origin: unknown external node. Recommend immediate firewall escalation.</chat-message>
-
             </div>
 
-            <div class="flex-shrink-0 flex items-end gap-4 px-6 py-5 border-t border-cyan-400/30 backdrop-blur-md"
-                 style="background: rgba(20,20,40,0.9);">
-
-                <label for="file-upload" class="attach-btn flex items-center justify-center text-xl p-2 flex-shrink-0 cursor-pointer transition-all duration-300"
-                       style="color: rgba(0,255,255,0.6);">
+            <!-- input -->
+            <div id="input-area" class="input-area flex-shrink-0 flex items-end gap-4 px-6 py-5 backdrop-blur-md">
+                <label for="file-upload" class="attach-btn text-xl p-2 flex-shrink-0">
                     <i class="fa fa-paperclip"></i>
                     <input type="file" id="file-upload" class="hidden">
                 </label>
-
+                <!-- text area -->
                 <div class="input-wrapper flex-1 relative">
-                    <textarea
-                        id="chat-input"
-                        rows="1"
-                        placeholder="Enter your query..."
-                        class="w-full px-5 py-3.5 rounded-3xl outline-none text-white text-base resize-none leading-relaxed transition-all duration-300"
-                        style="background: rgba(10,10,20,0.8); border: 1px solid rgba(0,255,255,0.3); font-family: inherit; overflow: hidden;"
-                        onfocus="this.style.borderColor='#00ffff'; this.style.boxShadow='0 0 20px rgba(0,255,255,0.3)';"
-                        onblur="this.style.borderColor='rgba(0,255,255,0.3)'; this.style.boxShadow='none';"
-                    ></textarea>
-                    <div class="input-glow absolute inset-0 rounded-3xl pointer-events-none"></div>
+                    <textarea id="chat-input" rows="1" placeholder="Enter your query..." class="w-full px-5 py-3.5 rounded-3xl text-base resize-none leading-relaxed"></textarea>
                 </div>
-
+                <!-- sending button -->
                 <button id="send-btn"
-                        class="flex-shrink-0 flex items-center gap-2 px-6 py-3.5 rounded-3xl border-none font-black text-sm tracking-wide text-[#0a0a0a] cursor-pointer transition-all duration-300 relative overflow-hidden hover:scale-105 active:scale-95"
-                        style="background: linear-gradient(135deg, #00ffff, #ff00ff); font-family: 'Orbitron', monospace;">
+                        class="flex-shrink-0 gap-2 px-6 py-3.5 rounded-3xl font-black text-sm tracking-wide relative">
                     <span class="send-icon text-lg">➤</span>
                 </button>
             </div>
