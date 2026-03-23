@@ -1,120 +1,77 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import SidebarContainer from "./components/Sidebar/SidebarContainer";
+import ChatContainer from "./components/Chat/ChatContainer";
+import { fetchConversations, fetchMessages, saveMessage } from "./api/mockApi";
+import { useEffect, useState } from "react";
+import {API_KEY} from "../config.js";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [conversations, setConversations] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [activeChatID, setActiveChatID] = useState("session-1");
+  const [isTyping, setIsTyping] = useState(false);
+
+  //get conversations when sidebar mounts
+  useEffect(() => {
+    fetchConversations().then(data => setConversations(data));
+  }, []);
+  //get conversations when active conversation changes
+  useEffect(() => {
+    fetchMessages(activeChatID).then(data => setMessages(data));
+  }, [activeChatID]);
+
+  //handle user message 
+  const handleSendMessage = async (text) => {
+    const userMsg = { id: Date.now(), text, sender: "user" };
+    
+    await saveMessage(activeChatID, userMsg); //save msg to mock API, update ui
+    setMessages((prev) => [...prev, userMsg]);
+
+    setIsTyping(true); //start the loading indicator
+
+    try {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${API_KEY}`, 
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "model": "openrouter/free", 
+          "messages": [{ "role": "user", "content": text }]
+        })
+      });
+      const data = await response.json();
+      const aiText = data.choices[0].message.content;
+      const aiMsg = { id: Date.now() + 1, text: aiText, sender: "ai" };
+      
+      await saveMessage(activeChatID, aiMsg); //save msg to mock api
+      setMessages((prev) => [...prev, aiMsg]);
+
+    } 
+    catch (error) {
+      console.error("AI Fetch Error:", error);
+    }
+    finally {
+      setIsTyping(false);
+    }
+  };
+
+  // const addMessage = (text, sender = "user") => {
+  //   const newMessage = {
+  //     id: Date.now(),
+  //     text: text,
+  //     sender: sender
+  //   };
+  //   setMessages((prev) => [...prev, newMessage]);
+  // };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    <div className="flex items-center justify-center min-h-screen p-5">
+      <div className="app-layout flex w-full h-[700px] rounded-2xl overflow-hidden border-2 relative">
+        <SidebarContainer activeChatID={activeChatID} setActiveChatID={setActiveChatID}/>
+        <ChatContainer messages={messages} onSendMessage={handleSendMessage} isTyping={isTyping}/>
+      </div>
+    </div>
   )
 }
 

@@ -1,111 +1,222 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap');
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
-body {
+* {
   margin: 0;
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+  padding: 0;
   box-sizing: border-box;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+body {
+  font-family: "San Francisco", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background: rgba(8,8,18,0.98);
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+.app-layout{
+  width: 100%;
+  max-height: 95vh;
+  border-color: cyan;
+  display: flex;
+}
+
+
+.ai-title{
+  font-family: 'Orbitron', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: #00ffff;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.8);
+}
+
+.new-chat-btn{
+  background: rgba(0,255,255,0.08);
+  border-color: rgba(0,255,255,0.3); 
+  color: #00ffff; 
+  margin-top: 5%;
+  margin-bottom: 5%;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.recent-label{
+  color: rgba(31, 231, 231, 0.4); 
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+}
+
+.current-session {
+  color: #00ffff; 
+  background: rgba(0,255,255,0.1); 
+  border-color: rgba(0,255,255,0.3);
+}
+
+.recent-chat{
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  border: transparent;
+  transition: all;
+  animation-duration: 200;
+}
+.recent-chat:hover{
+  background: rgba(0,255,255,0.06);
+  color: rgba(255,255,255,0.85);
+}
+/* settings */
+.settings-cont{
+  display: flex;
+  border: cyan;
+  color: rgba(0,255,255,0.5);
+}
+.fa-cog, .fa-user-circle{
+  color: rgba(0,255,255,0.5);
+  transition: color 0.3s ease;
+  cursor: pointer;
+  padding: 5px;
+  transform: scale(1.4);
+}
+.fa-cog:hover, .fa-user-circle:hover {
+  color: rgba(0,255,255,0.8);
+}
+
+.chat-area{
+  background: rgba(10,10,20,0.95);
+}
+
+#sidebar {
+  width: 25vw;
+  height: 100%;
+  background: rgba(8,8,18,0.98);
+}
+
+#message-list{
+  background: rgba(10,10,20,0.6);
+}
+
+
+.message {
+  animation: message-appear 0.3s ease-out;
+}
+
+@keyframes message-appear {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+.fa-paperclip{
+  position: relative;
+  margin-bottom: 80%;
+  transform: scale(1.2);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+#chat-input{
+  color: white;
+}
+#send-btn{
+  display: flex;
+  align-items: center;
+  margin-bottom: 7.5px;
+  width: 70px;
+  height: 55px;
+  border: none;
+  color: #0a0a0a;
+  cursor: pointer;
+  transition: all;
+  animation-duration: 300;
+  overflow: hidden;
+  background: linear-gradient(135deg, #00ffff, #ff00ff);
+  font-family: 'Orbitron', monospace;
+}
+
+.send-icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: large;
+}
+
+#send-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+#send-btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+#send-btn:hover {
+  box-shadow: 0 0 30px rgba(255, 0, 255, 0.6);
+}
+
+.attach-btn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(0,255,255,0.6);
+  transition: all;
+  animation-duration: 300;
+}
+.attach-btn:hover {
+  color: #00ffff !important;
+  transform: scale(1.1) rotate(15deg);
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+}
+
+textarea{
+  background-color: rgba(10,10,20,0.8);
+  border: 1px solid rgba(0,255,255,0.3);
+  font-family: inherit;
+  overflow: hidden;
+  outline: none;
+  color: white;
+  transition: all;
+  animation-duration: 300;
+}
+textarea:hover{
+  border-color: #00ffff;
+  box-shadow: 0 0 20px rgba(0,255,255,0.3);
+}
+
+.typing_indicator{
+  color: white;
+  font-style: italic;
+  font-size: 16px;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn{
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+
+
+@media (max-width: 768px) {
+  body {
+    padding: 0;
   }
-}
-p {
-  margin: 0;
-}
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
+  aside {
+    display: none;
+  }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  .message {
+    max-width: 88% !important;
+  }
 }
