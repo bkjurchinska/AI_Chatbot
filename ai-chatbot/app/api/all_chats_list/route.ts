@@ -6,12 +6,12 @@ let conversations = [
     {id: "session-2", title: "Data Analysis #4"},
 ];
 
-export async function getConversation() {
+export async function GET() {
     await new Promise((resolve) => setTimeout(resolve, 500));
     return NextResponse.json(conversations);
 }
 
-export async function createConversation(request: Request) {
+export async function POST(request: Request) {
     const {title} = await request.json();
 
     const newConversation = {id: `session-${Date.now()}`, 
