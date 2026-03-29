@@ -1,3 +1,5 @@
+"use client";
+
 import MsgItem from "./MsgItem";
 import ChatInput from "./ChatInput";
 import MessageList from "./MsgList";

@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react'
 
 const ConvoItem = ({ label, active = false}) => {
