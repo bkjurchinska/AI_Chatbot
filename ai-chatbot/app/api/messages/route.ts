@@ -31,7 +31,9 @@ export async function POST(request: Request) {
         if(!text || !userId) {
             return NextResponse.json({ error: "Missing text or userId" }, { status: 400 });
         }
+        
         if (!messagesData[userId]) messagesData[userId] = [];
+
         const userMsg = { id: Date.now(), text, sender: "user" };
         messagesData[userId].push(userMsg); //save user msg
 
@@ -47,25 +49,24 @@ export async function POST(request: Request) {
             }) 
         });
 
-        if (!response.ok) {
-            const errorData = await response.text();
-            console.error("OpenRouter API error", errorData);
-            return NextResponse.json({error: "AI provider error"}, {status: 500});
-        }
-
-        const data = await response.json();
-
-        if (data.choices && data.choices[0]?.message) {
-            const aiTxt = data.choices[0].message.content;
-            const aiMsg = { id: Date.now() + 1, text: aiTxt, sender: "ai" };
-            
-            messagesData[userId].push(aiMsg); // Save AI msg
-            return NextResponse.json(aiMsg);
-        } else {
-            console.error("Unexpected AI Response Format:", data);
-            return NextResponse.json({ error: "Empty AI response" }, { status: 500 });
-        }
+    if (!response.ok) {
+        const errorData = await response.text();
+        console.error("Openrouter API error", errorData);
+        return NextResponse.json({error: "AI provider error"}, {status: 500});
     }
+
+    const data = await response.json();
+    if (data.choices && data.choices[0]?.message) {
+        const aiTxt = data.choices[0].message.content;
+        const aiMsg = { id: Date.now() + 1, text: aiTxt, sender: "ai" };
+        
+        messagesData[userId].push(aiMsg); // Save AI msg
+        return NextResponse.json(aiMsg);
+    } else {
+        console.error("Unexpected AI response", data);
+        return NextResponse.json({ error: "Empty AI response" }, { status: 500 });
+    }
+}
 
     catch (error) {
         console.error("No AI response", error);

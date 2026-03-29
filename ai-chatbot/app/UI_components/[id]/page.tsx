@@ -43,6 +43,7 @@ export default function ChatPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, userId: id }),
       });
+
       if (!response.ok) throw new Error('Network response was not ok');
       const aiMsg = await response.json();
 
