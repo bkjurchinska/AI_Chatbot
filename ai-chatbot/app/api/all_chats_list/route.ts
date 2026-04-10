@@ -1,22 +1,29 @@
 import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 //mock database
-let conversations = [
-    {id: "session-1", title: "Current Session"},
-    {id: "session-2", title: "Data Analysis #4"},
-];
+// let conversations = [
+//     {id: "session-1", title: "Current Session"},
+//     {id: "session-2", title: "Data Analysis #4"},
+// ];
 
 export async function GET() {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return NextResponse.json(conversations);
+  const conversations = await prisma.conversation.findMany({
+    orderBy: {
+      createdAt: 'desc'
+    }
+  });
+  return NextResponse.json(conversations);
 }
 
 export async function POST(request: Request) {
-    const {title} = await request.json();
+  const { title } = await request.json();
 
-    const newConversation = {id: `session-${Date.now()}`, 
-    title: title || "New Chat"};
+  const newConversation = await prisma.conversation.create({
+    data: {
+      title: title || "New Chat",
+    }
+  });
 
-    conversations.push(newConversation);
-    return NextResponse.json(newConversation);
+  return NextResponse.json(newConversation);
 }
