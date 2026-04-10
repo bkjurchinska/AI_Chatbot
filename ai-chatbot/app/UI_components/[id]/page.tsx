@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import ChatContainer from "../../../components/Chat/ChatContainer";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Message {
   id: number;
@@ -12,56 +12,46 @@ interface Message {
 
 export default function ChatPage() {
   const { id } = useParams();
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isTyping, setIsTyping] = useState(false);
+  const queryClient = useQueryClient();
 
-  //fetch messages
-  useEffect(() => {
-    if (!id) return;
-    setMessages([]); //clear old msgs when switching sessions
+  // Fetch messages
+  const { data: messages = [] } = useQuery({
+    queryKey: ["messages", id],
+    queryFn: async () => {
+      if (!id) return [];
+      const res = await fetch(`/api/messages?conversationId=${id}`);
+      if (!res.ok) throw new Error("Failed to fetch messages");
+      return res.json();
+    },
+    enabled: !!id,
+  });
 
-    fetch(`/api/messages?userId=${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setMessages(Array.isArray(data) ? data : []); //make sure data is an array
-      })
-      .catch((err) => console.error("Failed to fetch messages", err));
-  }, [id]);
-
-  const handleSend = async (text: string) => {
-    //make sure no empty messages are sent
-    console.log("Sending message:", text);
-    if (!text.trim()) return;
-
-    const userMsg: Message = { id: Date.now(), text, sender: "user" };
-    setMessages((prev) => [...(Array.isArray(prev) ? prev : []), userMsg]);
-    setIsTyping(true);
-    ///calling server side api
-    try {
+  // Send message mutation
+  const sendMutation = useMutation({
+    mutationFn: async (text: string) => {
       const response = await fetch("/api/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, userId: id }),
+        body: JSON.stringify({ text, conversationId: id }),
       });
+      if (!response.ok) throw new Error("Failed to send message");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["messages", id] });
+    },
+  });
 
-      if (!response.ok) throw new Error("Network response was not ok");
-      const aiMsg = await response.json();
-
-      if (aiMsg && aiMsg.text) {
-        setMessages((prev) => [...(Array.isArray(prev) ? prev : []), aiMsg]);
-      } else console.error("Response error", aiMsg);
-    } catch (error) {
-      console.error("Error in sending message", error);
-    } finally {
-      setIsTyping(false);
-    }
+  const handleSend = (text: string) => {
+    if (!text.trim()) return;
+    sendMutation.mutate(text);
   };
 
   return (
     <ChatContainer
       messages={messages}
       onSendMessage={handleSend}
-      isTyping={isTyping}
+      isTyping={sendMutation.isPending}
     />
   );
 }

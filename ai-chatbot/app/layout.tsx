@@ -1,4 +1,5 @@
 import SidebarContainer from '@/components/Sidebar/SidebarContainer';
+import Providers from '@/components/Providers/Providers';
 import './globals.css';
 
 export default function RootLayout({
@@ -16,12 +17,14 @@ export default function RootLayout({
       </head>
 
       <body className="flex items-center justify-center h-full">
-        <div className="app-layout flex w-full h-[700px] overflow-hidden">
-          <SidebarContainer />
-          <main className="flex-1 flex flex-col overflow-hidden">
-            {children}
-          </main>
-        </div>
+        <Providers>
+          <div className="app-layout flex w-full h-[700px] overflow-hidden">
+            <SidebarContainer />
+            <main className="flex-1 flex flex-col overflow-hidden">
+              {children}
+            </main>
+          </div>
+        </Providers>
       </body>
     </html>
   );
