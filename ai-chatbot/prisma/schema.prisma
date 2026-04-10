@@ -14,6 +14,7 @@ datasource db {
 
 model Conversation {
   id        Int       @id @default(autoincrement())
+  title     String?
   createdAt DateTime  @default(now())
   messages  Message[]
 }
@@ -21,7 +22,8 @@ model Conversation {
 model Message {
   id             Int          @id @default(autoincrement())
   content        String
+  role           String       // "user" or "assistant"
   createdAt      DateTime     @default(now())
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   conversationId Int
 }
