@@ -29,11 +29,10 @@ export default function ChatClient({ id, initialMessages }: ChatClientProps) {
     initialMessages: memoizedInitialMessages,
   });
 
-  // 2. Map messages from AI SDK back to your UI format safely
   const formattedMessages = React.useMemo(() => {
     return messages.map((m) => ({
       id: m.id,
-      text: m.content || '', // Crucial: prevents .replace() error on undefined
+      text: m.content || '',
       sender: m.role === 'assistant' ? 'ai' : 'user',
     }));
   }, [messages]);

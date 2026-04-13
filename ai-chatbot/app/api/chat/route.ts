@@ -8,21 +8,41 @@ const openrouter = createOpenAI({
 });
 
 export async function POST(req: Request) {
-  const { messages, conversationId } = await req.json();
-  const userMessage = messages[messages.length - 1];
+  try {
+    const { messages, conversationId } = await req.json();
+    
+    const idAsNumber = parseInt(conversationId);
 
-  await createMessage(userMessage.content, 'user', parseInt(conversationId));
+    if (isNaN(idAsNumber)) {
+      console.error("Invalid conversationId received:", conversationId);
+      return new Response("Invalid ID", { status: 400 });
+    }
 
-  const result = streamText({
-    model: openrouter('liquid/lfm-2.5-1.2b-thinking:free'),
-    messages: messages.map((m: any) => ({
-      role: m.role,
-      content: m.content,
-    })),
-    async onFinish({ text }) {
-      await createMessage(text, 'ai', parseInt(conversationId));
-    },
-  });
+    const userMessage = messages[messages.length - 1];
 
-  return (await result).toTextStreamResponse();
+    console.log('Saving user message...');
+    await createMessage(userMessage.content, 'user', idAsNumber);
+
+    const result = await streamText({
+      model: openrouter('liquid/lfm-2.5-1.2b-thinking:free'),
+      messages: messages.map((m: any) => ({
+        role: m.role === 'ai' ? 'assistant' : m.role,
+        content: m.content,
+      })),
+      async onFinish({ text }) {
+        try {
+          console.log('trying to save ai message');
+          await createMessage(text || "", 'ai', idAsNumber);
+          console.log('save successful!!');
+        } catch (error) {
+          console.error('Database error:', error);
+        }
+      },
+    });
+
+    return result.toDataStreamResponse();
+  } catch (error: any) {
+    console.error("POST Route Error:", error);
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+  }
 }
