@@ -1,30 +1,14 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
-
-//mock database
-// let conversations = [
-//     {id: "session-1", title: "Current Session"},
-//     {id: "session-2", title: "Data Analysis #4"},
-// ];
+import { getConversations, createConversation, deleteConversation } from "@/lib/db";
 
 export async function GET() {
-  const conversations = await prisma.conversation.findMany({
-    orderBy: {
-      createdAt: 'desc'
-    }
-  });
+  const conversations = await getConversations();
   return NextResponse.json(conversations);
 }
 
 export async function POST(request: Request) {
   const { title } = await request.json();
-
-  const newConversation = await prisma.conversation.create({
-    data: {
-      title: title || "New Chat",
-    }
-  });
-
+  const newConversation = await createConversation(title);
   return NextResponse.json(newConversation);
 }
 
@@ -36,11 +20,7 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    await prisma.conversation.delete({
-      where: {
-        id: parseInt(id),
-      },
-    });
+    await deleteConversation(parseInt(id));
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Delete conversation error", error);

@@ -1,26 +1,18 @@
 import { NextResponse } from 'next/server';
-import prisma from "@/lib/prisma";
+import { getMessages, createMessage } from "@/lib/db";
 
 //get messages for a spec session
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const conversationId = searchParams.get("conversationId") || searchParams.get("userId"); // fallback for userId
-    
+
     if (!conversationId) {
         return NextResponse.json({ error: "Missing conversationId" }, { status: 400 });
     }
 
     try {
-        const messages = await prisma.message.findMany({
-            where: {
-                conversationId: parseInt(conversationId),
-            },
-            orderBy: {
-                createdAt: 'asc',
-            },
-        });
-        
-        // Map Prisma model to the frontend expected format if necessary
+        const messages = await getMessages(parseInt(conversationId));
+
         const formattedMessages = messages.map(m => ({
             id: m.id,
             text: m.content,
@@ -46,16 +38,9 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Missing text or conversationId" }, { status: 400 });
         }
 
-        // 1. Save user message
-        const userMsg = await prisma.message.create({
-            data: {
-                content: text,
-                role: "user",
-                conversationId: parseInt(conversationId),
-            },
-        });
+        const parsedConvoId = parseInt(conversationId);
+        await createMessage(text, "user", parsedConvoId);
 
-        // 2. Get AI response from OpenRouter
         const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -77,15 +62,8 @@ export async function POST(request: Request) {
         const data = await response.json();
         if (data.choices && data.choices[0]?.message) {
             const aiTxt = data.choices[0].message.content;
-            
-            // 3. Save AI message
-            const aiMsg = await prisma.message.create({
-                data: {
-                    content: aiTxt,
-                    role: "ai",
-                    conversationId: parseInt(conversationId),
-                },
-            });
+
+            const aiMsg = await createMessage(aiTxt, "ai", parsedConvoId);
 
             return NextResponse.json({
                 id: aiMsg.id,
@@ -98,7 +76,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Empty AI response" }, { status: 500 });
         }
     } catch (error) {
-        console.error("No AI response", error);
-        return NextResponse.json({ error: "AI failed" }, { status: 500 });
+        console.error("Post message error", error);
+        return NextResponse.json({ error: "Failed to process message" }, { status: 500 });
     }
 }
