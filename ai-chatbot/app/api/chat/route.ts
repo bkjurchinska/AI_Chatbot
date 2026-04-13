@@ -10,6 +10,7 @@ const openrouter = createOpenAI({
 export async function POST(req: Request) {
   const { messages, conversationId } = await req.json();
   const userMessage = messages[messages.length - 1];
+
   await createMessage(userMessage.content, 'user', parseInt(conversationId));
 
   const result = streamText({
@@ -22,5 +23,6 @@ export async function POST(req: Request) {
       await createMessage(text, 'ai', parseInt(conversationId));
     },
   });
-  return result.toTextStreamResponse();
+
+  return (await result).toTextStreamResponse();
 }
