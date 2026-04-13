@@ -12,11 +12,10 @@ const SidebarList = ({ conversations }) => {
   const router = useRouter();
 
   const handleNewChat = async () => {
-    const title = `New Chat ${conversations.length + 1}`;
     const response = await fetch('/api/all_chats_list', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title })
+      body: JSON.stringify({})
     });
 
     if (response.ok) {

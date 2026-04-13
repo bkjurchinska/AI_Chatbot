@@ -2,53 +2,43 @@
 
 import React from 'react';
 import ChatContainer from '../../../components/Chat/ChatContainer';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { useChat } from 'ai/react';
 
-interface ChatProps {
+export default function ChatClient({
+  id,
+  initialMessages,
+}: {
   id: string;
-  initialMessages: string[];
-}
-
-export default function ChatClient({ id, initialMessages }) {
-  const queryClient = useQueryClient();
-  const router = useRouter();
-
-  const { data: messages } = useQuery({
-    queryKey: ['messages', id],
-    queryFn: async () => {
-      const res = await fetch(`/api/messages?conversationId=${id}`);
-      return res.json();
-    },
-    initialData: initialMessages,
+  initialMessages: any[];
+}) {
+  const { messages, append, isLoading } = useChat({
+    api: '/api/chat',
+    body: { conversationId: id },
+    initialMessages: initialMessages.map((m: any) => ({
+      id: m.id.toString(),
+      role: m.sender === 'ai' ? 'assistant' : 'user',
+      content: m.text,
+    })),
   });
 
-  const sendMutation = useMutation({
-    mutationFn: async (text) => {
-      const response = await fetch('/api/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, conversationId: id }),
-      });
-      if (!response.ok) throw new Error('Failed to send message');
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['messages', id] });
-      router.refresh();
-    },
-  });
+  const formattedMessages = messages.map((m: any) => ({
+    id: isNaN(parseInt(m.id)) ? m.id : parseInt(m.id),
+    text: m.content,
+    sender: m.role === 'assistant' ? 'ai' : 'user',
+  }));
 
   const handleSend = (text: string) => {
-    if (!text.trim()) return;
-    sendMutation.mutate(text);
+    append({
+      role: 'user',
+      content: text,
+    });
   };
 
   return (
     <ChatContainer
-      messages={initialMessages}
+      messages={formattedMessages}
       onSendMessage={handleSend}
-      isTyping={sendMutation.isPending}
+      isTyping={isLoading}
     />
   );
 }
