@@ -1,57 +1,20 @@
-"use client";
+import React from 'react';
+import { getMessages } from '@/lib/db';
+import ChatClient from './ChatClient';
 
-import { useParams } from "next/navigation";
-import ChatContainer from "../../../components/Chat/ChatContainer";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+export default async function ChatPage({ params }) {
+  const { id } = await params;
+  const conversationId = parseInt(id);
 
-interface Message {
-  id: number;
-  text: string;
-  sender: "user" | "ai";
-}
-
-export default function ChatPage() {
-  const { id } = useParams();
-  const queryClient = useQueryClient();
-
-  // Fetch messages
-  const { data: messages = [] } = useQuery({
-    queryKey: ["messages", id],
-    queryFn: async () => {
-      if (!id) return [];
-      const res = await fetch(`/api/messages?conversationId=${id}`);
-      if (!res.ok) throw new Error("Failed to fetch messages");
-      return res.json();
-    },
-    enabled: !!id,
-  });
-
-  // Send message mutation
-  const sendMutation = useMutation({
-    mutationFn: async (text: string) => {
-      const response = await fetch("/api/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, conversationId: id }),
-      });
-      if (!response.ok) throw new Error("Failed to send message");
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["messages", id] });
-    },
-  });
-
-  const handleSend = (text: string) => {
-    if (!text.trim()) return;
-    sendMutation.mutate(text);
-  };
+  const messages = await getMessages(conversationId);
+  const formattedMessages = messages.map((m) => ({
+    id: m.id,
+    text: m.content,
+    sender: m.role,
+    createdAt: m.createdAt,
+  }));
 
   return (
-    <ChatContainer
-      messages={messages}
-      onSendMessage={handleSend}
-      isTyping={sendMutation.isPending}
-    />
+    <ChatClient id={id} initialMessages={formattedMessages} />
   );
 }

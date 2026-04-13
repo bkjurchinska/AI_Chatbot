@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getMessages, createMessage } from "@/lib/db";
+import { revalidatePath } from "next/cache";
 
 //get messages for a spec session
 export async function GET(request: Request) {
@@ -64,6 +65,7 @@ export async function POST(request: Request) {
             const aiTxt = data.choices[0].message.content;
 
             const aiMsg = await createMessage(aiTxt, "ai", parsedConvoId);
+            revalidatePath(`/UI_components/${parsedConvoId}`);
 
             return NextResponse.json({
                 id: aiMsg.id,
