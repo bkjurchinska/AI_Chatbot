@@ -10,6 +10,8 @@
     "module": "esnext",
     "ignoreDeprecations": "6.0",
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "baseUrl": ".",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",

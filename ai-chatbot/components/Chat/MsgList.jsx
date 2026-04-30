@@ -6,8 +6,8 @@ import MessageItem from './MsgItem';
 const MessageList = ({ messages = [], isTyping }) => {
   return (
     <div id="message-list" className="flex-1 overflow-y-auto flex flex-col gap-4 p-6">
-      {Array.isArray(messages) && messages.map((msg) => (
-        <MessageItem key={msg.id} text={msg.text} sender={msg.sender} />
+      {Array.isArray(messages) && messages.map((msg, index) => (
+        <MessageItem key={msg.id || index} text={msg.text} sender={msg.sender} />
       ))}
 
       {/* loading indicator */}
