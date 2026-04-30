@@ -3,7 +3,7 @@ import prettier from 'eslint-plugin-prettier/recommended';
 
 export default [
   js.configs.recommended,
-  prettier, // This integrates Prettier and must be last
+  prettier,
   {
     rules: {
       'no-unused-vars': 'warn',

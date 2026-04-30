@@ -1,0 +1,225 @@
+@import "tailwindcss";
+/* @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap'); */
+
+* {
+  margin: 0.1%;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "San Francisco", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background: rgba(8,8,18,0.98);
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.app-layout{
+  width: 100%;
+  max-height: 95vh;
+  display: flex;
+}
+
+.ai-title{
+  font-family: 'Orbitron', monospace;
+  font-size: 30px;
+  font-weight: 700;
+  padding: 20px;
+  color: #00ffff;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.8);
+}
+#sidebar{
+  width: 25vw;
+  height: 100%;
+  background: rgba(8,8,18,0.98);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.new-chat-btn{
+  background: rgba(0,255,255,0.08);
+  border-color: rgba(0,255,255,0.3); 
+  color: #00ffff; 
+  margin-top: 5%;
+  margin-bottom: 5%;
+  padding: 10px 20px;
+  font-family: 'Rajdhani', sans-serif;
+}
+.chat-title{
+  padding: 10px;
+  color: #00ffff;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+}
+
+.recent-label{
+  color: rgba(49, 242, 242, 0.5); 
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  margin-left: 2%;
+}
+
+.current-session {
+  color: #00ffff; 
+  background: rgba(0,255,255,0.1); 
+  border-color: rgba(0,255,255,0.3);
+  padding: 10px;
+}
+ConvoItem{
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  border: transparent;
+  transition: all;
+  animation-duration: 200;
+  padding: 10px;
+}
+
+.recent-chat{
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  border: solid 1px rgba(255,255,255,0.5);
+  transition: all;
+  animation-duration: 200;
+  padding: 10px;
+}
+.recent-chat:hover{
+  background: rgba(0,255,255,0.06);
+  color: rgba(255,255,255,0.85);
+}
+/* settings */
+.settings-cont{
+  display: flex;
+  border: cyan;
+  color: rgba(0,255,255,0.5);
+}
+.fa-cog, .fa-user-circle{
+  color: rgba(0,255,255,0.5);
+  transition: color 0.3s ease;
+  cursor: pointer;
+  padding: 10px;
+  transform: scale(1.4);
+}
+.fa-cog:hover, .fa-user-circle:hover {
+  color: rgba(0,255,255,0.8);
+}
+
+.chat-area{
+  background: rgba(10,10,20,0.95);
+  height: 100%;
+}
+
+#message-list{
+  background: rgba(10,10,20,0.6);
+}
+
+
+.message {
+  animation: message-appear 0.3s ease-out;
+  padding: 10px;
+  border: #00ffff 1px solid;
+  border-radius: 20px;
+  margin: 3%;
+}
+
+@keyframes message-appear {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+.fa-paperclip{
+  position: relative;
+  margin-bottom: 10px;
+  margin-left: 70px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+.fa-paperclip:hover {
+  color: #00ffff !important;
+  transform: scale(1.3) rotate(10deg);
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+}
+
+#chat-input{
+  color: white;
+  display: flex;
+  justify-content: center;
+  border-radius: 15px;
+}
+#send-btn{
+  display: flex;
+  align-items: center;
+  margin-right: 15%;
+  margin-bottom: 10px;
+  width: 70px;
+  height: 45px;
+  border: none;
+  color: #0a0a0a;
+  cursor: pointer;
+  animation-duration: 300;
+  overflow: hidden;
+  background: linear-gradient(135deg, #00ffff, #ff00ff);
+  font-family: 'Orbitron', monospace;
+}
+
+.send-icon{
+  margin-left: 40%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: large;
+}
+
+#send-btn:hover {
+  box-shadow: 0 0 30px rgba(255, 0, 255, 0.6);
+}
+
+.attach-btn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(0,255,255,0.6);
+  transition: all;
+  animation-duration: 300;
+}
+.attach-btn:hover {
+  color: #00ffff;
+  transform: scale(1.1) rotate(15deg);
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+}
+
+textarea{
+  background-color: rgba(10,10,20,0.8);
+  border: 1px solid rgba(0,255,255,0.3);
+  margin-left: 10%;
+  width: 80%;
+  height: 45px;
+  font-family: inherit;
+  overflow: hidden;
+  color: white;
+  animation-duration: 300;
+}
+textarea:hover{
+  border-color: #00ffff;
+  box-shadow: 0 0 20px rgba(0,255,255,0.3);
+}
+
+.typing_indicator{
+  color: white;
+  font-style: italic;
+  font-size: 16px;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn{
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

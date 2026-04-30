@@ -17,6 +17,7 @@ body {
   width: 100%;
   max-height: 95vh;
   border-color: cyan;
+  display: flex;
 }
 
 
@@ -32,7 +33,9 @@ body {
   background: rgba(0,255,255,0.08);
   border-color: rgba(0,255,255,0.3); 
   color: #00ffff; 
-  font-family: 'Rajdhani', sans-serif;"
+  margin-top: 5%;
+  margin-bottom: 5%;
+  font-family: 'Rajdhani', sans-serif;
 }
 
 .recent-label{
@@ -81,6 +84,7 @@ body {
 
 #sidebar {
   width: 25vw;
+  height: 100%;
   background: rgba(8,8,18,0.98);
 }
 
@@ -101,13 +105,20 @@ body {
 
 .fa-paperclip{
   position: relative;
-  top: 10px;
+  margin-bottom: 80%;
+  transform: scale(1.2);
   transition: transform 0.3s ease, color 0.3s ease;
 }
 
+#chat-input{
+  color: white;
+}
 #send-btn{
   display: flex;
   align-items: center;
+  margin-bottom: 7.5px;
+  width: 70px;
+  height: 55px;
   border: none;
   color: #0a0a0a;
   cursor: pointer;
@@ -116,6 +127,13 @@ body {
   overflow: hidden;
   background: linear-gradient(135deg, #00ffff, #ff00ff);
   font-family: 'Orbitron', monospace;
+}
+
+.send-icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: large;
 }
 
 #send-btn::before {
@@ -168,6 +186,24 @@ textarea{
 textarea:hover{
   border-color: #00ffff;
   box-shadow: 0 0 20px rgba(0,255,255,0.3);
+}
+
+.typing_indicator{
+  color: white;
+  font-style: italic;
+  font-size: 16px;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn{
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 
