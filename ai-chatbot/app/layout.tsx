@@ -1,6 +1,22 @@
 import SidebarContainer from '@/components/Sidebar/SidebarContainer';
 import Providers from '@/components/Providers/Providers';
 import './globals.css';
+import { Metadata, Viewport } from 'next';
+import SWRegistration from '@/components/SWRegistration';
+
+export const viewport: Viewport = {
+  themeColor: 'rgba(8,8,18,0.98)',
+  width: 'device-width',
+  initialScale: 1,
+};
+
+export const metadata: Metadata = {
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'PomodoroAI',
+  },
+};
 
 export default function RootLayout({
   children,
@@ -17,6 +33,7 @@ export default function RootLayout({
       </head>
 
       <body className="flex items-center justify-center h-full">
+        <SWRegistration />
         <Providers>
           <div className="app-layout flex w-full h-[700px] overflow-hidden">
             <SidebarContainer />
