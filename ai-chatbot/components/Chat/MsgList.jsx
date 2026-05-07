@@ -14,7 +14,7 @@ const MessageList = ({ messages = [], isTyping }) => {
       {isTyping && (
         <div className="indicator_cont flex justify-start">
             <div className="typing_indicator px-4 py-2 text-sm rounded-2xl animate-pulse">
-                NEO AI is thinking...
+                Pomodoro AI is thinking...
             </div>
         </div>
       )}

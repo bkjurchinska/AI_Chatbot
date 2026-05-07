@@ -5,6 +5,7 @@ import ConvoItem from './ConvoItem';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { Trash2 } from 'lucide-react';
+import Image from 'next/image'
 
 const SidebarList = ({ conversations }) => {
   const params = useParams();
@@ -48,7 +49,9 @@ const SidebarList = ({ conversations }) => {
   return (
     <aside id="sidebar" className="sidebar flex flex-col w-60 min-w-[240px] border-r p-4 gap-4 h-full">
       <div className="flex items-center gap-3 pb-4 border-b">
-        <span className="ai-title">NEO AI</span>
+        <Image src="/tomato_logo.png" alt='pomodoro-logo' width={50} height={50}></Image>
+        <span className="ai-title">Pomodoro AI</span>
+        
       </div>
       <button
         className="new-chat-btn flex items-center gap-2 border text-sm font-semibold tracking-widest px-4 py-2.5 rounded-xl uppercase"
